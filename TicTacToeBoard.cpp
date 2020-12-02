@@ -8,8 +8,8 @@
 TicTacToeBoard::TicTacToeBoard()
 {
   turn = X;
-  for(int i=0; i<BOARDSIZE; i++)
-    for(int j=0; j<BOARDSIZE; j++)
+  for (int i = 0; i < BOARDSIZE; i++)
+    for (int j = 0; j < BOARDSIZE; j++)
       board[i][j] = Blank;
 }
 
@@ -19,7 +19,15 @@ TicTacToeBoard::TicTacToeBoard()
 **/
 Piece TicTacToeBoard::toggleTurn()
 {
-  return Invalid;
+  if (turn == X)
+  {
+    turn = O;
+  }
+  else
+  {
+    turn = X;
+  }
+  return turn;
 }
 
 /**
@@ -30,10 +38,24 @@ Piece TicTacToeBoard::toggleTurn()
  * Out of bounds coordinates return the Piece Invalid value. When the game
  * is over, no more pieces can be placed so attempting to place a piece
  * should neither change the board nor change whose turn it is.
-**/ 
+**/
 Piece TicTacToeBoard::placePiece(int row, int column)
 {
-  return Invalid;
+  if (row < 0 || row > BOARDSIZE || column < 0 || column > BOARDSIZE)
+  {
+    return Invalid;
+  }
+  if (board[row][column] == Blank)
+  {
+    board[row][column] = turn;
+    Piece t = turn;
+    toggleTurn();
+    return t;
+  }
+  else
+  {
+    return board[row][column];
+  }
 }
 
 /**
@@ -42,7 +64,11 @@ Piece TicTacToeBoard::placePiece(int row, int column)
 **/
 Piece TicTacToeBoard::getPiece(int row, int column)
 {
-  return Invalid;
+  if (row < 0 || row > BOARDSIZE || column < 0 || column > BOARDSIZE)
+  {
+    return Invalid;
+  }
+  return board[row][column];
 }
 
 /**
@@ -51,5 +77,38 @@ Piece TicTacToeBoard::getPiece(int row, int column)
 **/
 Piece TicTacToeBoard::getWinner()
 {
+  for (int i = 0; i < 3; ++i)
+  {
+    if ((board[i][0] != Blank) && (board[i][0] == board[i][1]) && (board[i][0] == board[i][2]))
+    {
+      return board[i][0];
+    }
+    if ((board[0][i] != Blank) && (board[0][i] == board[1][i]) && (board[0][i] == board[2][i]))
+    {
+      return board[0][i];
+    }
+  }
+  if ((board[0][0] != Blank) && (board[0][0] == board[1][1]) && (board[0][0] == board[2][2]))
+  {
+    return board[0][0];
+  }
+  if ((board[2][0] != Blank) && (board[2][0] == board[1][1]) && (board[2][0] == board[0][2]))
+  {
+    return board[2][0];
+  }
+  int numBlank = 0;
+  for (int i = 0; i < 3; ++i)
+  {
+    for (int j = 0; j < 3; ++j)
+    {
+      if (board[i][j] == Blank)
+      {
+        numBlank++;
+      }
+    }
+  }
+  if(numBlank == 0){
+    return Blank;
+  }
   return Invalid;
 }
